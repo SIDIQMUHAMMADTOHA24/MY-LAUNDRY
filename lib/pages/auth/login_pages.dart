@@ -9,20 +9,22 @@ import 'package:my_laundry/config/app_assets.dart';
 import 'package:my_laundry/config/app_colors.dart';
 import 'package:my_laundry/config/app_constant.dart';
 import 'package:my_laundry/config/app_response.dart';
+import 'package:my_laundry/config/app_session.dart';
 import 'package:my_laundry/config/failure.dart';
 import 'package:my_laundry/data_source/data_source.dart';
+import 'package:my_laundry/pages/auth/register_pages.dart';
+import 'package:my_laundry/pages/dashboard_pages.dart';
 import 'package:my_laundry/pages/widget/field_data_user_widget.dart';
-import 'package:my_laundry/providers/register_providers.dart';
+import 'package:my_laundry/providers/login_providers.dart';
 
-class RegisterPages extends ConsumerStatefulWidget {
-  const RegisterPages({super.key});
+class LoginPages extends ConsumerStatefulWidget {
+  const LoginPages({super.key});
 
   @override
-  ConsumerState<RegisterPages> createState() => _RegisterPagesState();
+  ConsumerState<LoginPages> createState() => _LoginPagesState();
 }
 
-class _RegisterPagesState extends ConsumerState<RegisterPages> {
-  final edtUsername = TextEditingController();
+class _LoginPagesState extends ConsumerState<LoginPages> {
   final edtEmail = TextEditingController();
   final edtPassword = TextEditingController();
   final formKey = GlobalKey<FormState>();
@@ -31,12 +33,9 @@ class _RegisterPagesState extends ConsumerState<RegisterPages> {
     bool validate = formKey.currentState!.validate();
     if (!validate) return;
 
-    setRegisterStatus(ref, 'Loading');
+    setLoginStatus(ref, 'Loading');
 
-    UserDataSource.register(
-            userName: edtUsername.text,
-            email: edtEmail.text,
-            password: edtPassword.text)
+    UserDataSource.login(email: edtEmail.text, password: edtPassword.text)
         .then((value) {
       String newStatus = '';
 
@@ -64,7 +63,7 @@ class _RegisterPagesState extends ConsumerState<RegisterPages> {
             AppResponse.invalidInput(context, failure.mesaage ?? '{}');
             break;
           case UnauthorisedFailure:
-            newStatus = 'Unauthorised';
+            newStatus = 'Login Failed';
             DInfo.toastError(newStatus);
           default:
             newStatus = 'Request Error';
@@ -72,10 +71,17 @@ class _RegisterPagesState extends ConsumerState<RegisterPages> {
             newStatus = failure.mesaage ?? '-';
             break;
         }
-        setRegisterStatus(ref, newStatus);
+        setLoginStatus(ref, newStatus);
       }, (result) {
-        DInfo.toastSuccess('Register Success');
-        setRegisterStatus(ref, 'Success');
+        AppSession.setUser(result['data']);
+        AppSession.setBearerToken(result['token']);
+        DInfo.toastSuccess('Login Success');
+        setLoginStatus(ref, 'Success');
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const DashboardPages(),
+            ));
       });
     });
   }
@@ -135,17 +141,6 @@ class _RegisterPagesState extends ConsumerState<RegisterPages> {
                     child: Column(
                       children: [
                         FieldDataUserWidget(
-                          controller: edtUsername,
-                          hint: 'User Name',
-                          icon: const Icon(
-                            Icons.person,
-                            color: Colors.green,
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        FieldDataUserWidget(
                           controller: edtEmail,
                           hint: 'Email',
                           icon: const Icon(
@@ -173,13 +168,18 @@ class _RegisterPagesState extends ConsumerState<RegisterPages> {
                                 aspectRatio: 1,
                                 child: DButtonFlat(
                                     onClick: () {
-                                      Navigator.pop(context);
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                const RegisterPages(),
+                                          ));
                                     },
                                     mainColor: Colors.white70,
                                     radius: 10,
                                     padding: const EdgeInsets.all(0),
                                     child: const Text(
-                                      'LOG',
+                                      'REG',
                                       style: TextStyle(
                                           color: Colors.green,
                                           fontWeight: FontWeight.bold),
@@ -190,7 +190,7 @@ class _RegisterPagesState extends ConsumerState<RegisterPages> {
                             Expanded(
                               child: Consumer(builder: (_, wiRef, __) {
                                 String status =
-                                    wiRef.watch(registerStatusProviders);
+                                    wiRef.watch(loginStatusProviders);
 
                                 if (status == 'Loading') {
                                   return DView.loadingCircle();
@@ -205,7 +205,7 @@ class _RegisterPagesState extends ConsumerState<RegisterPages> {
                                     child: const Padding(
                                       padding: EdgeInsets.all(5.5),
                                       child: Text(
-                                        'Register',
+                                        'Login',
                                       ),
                                     ));
                               }),

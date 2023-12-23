@@ -24,4 +24,21 @@ class UserDataSource {
       return Left(FetechFailure(e.toString()));
     }
   }
+
+  static Future<Either<Failure, Map>> login(
+      {required String email, required String password}) async {
+    var uri = Uri.parse('${AppConstant.baseUrl}/login');
+    try {
+      final response = await http.post(uri,
+          headers: AppRequest.header(),
+          body: {'email': email, 'password': password});
+      final data = AppResponse.data(response);
+      return Right(data);
+    } on Exception catch (e) {
+      if (e is Failure) {
+        return Left(e);
+      }
+      return Left(FetechFailure(e.toString()));
+    }
+  }
 }

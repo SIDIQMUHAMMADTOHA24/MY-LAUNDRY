@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:my_laundry/config/app_colors.dart';
+import 'package:my_laundry/pages/auth/login_pages.dart';
 import 'package:my_laundry/pages/auth/register_pages.dart';
 
 void main() {
@@ -31,7 +32,7 @@ class MyApp extends StatelessWidget {
                       EdgeInsets.symmetric(vertical: 14, horizontal: 16)),
                   textStyle: const MaterialStatePropertyAll(
                       TextStyle(fontSize: 15))))),
-      home: const RegisterPages(),
+      home: const LoginPages(),
     );
   }
 }
