@@ -11,6 +11,7 @@ import 'package:my_laundry/config/app_constant.dart';
 import 'package:my_laundry/config/app_response.dart';
 import 'package:my_laundry/config/app_session.dart';
 import 'package:my_laundry/config/failure.dart';
+import 'package:my_laundry/config/nav.dart';
 import 'package:my_laundry/data_source/data_source.dart';
 import 'package:my_laundry/pages/auth/register_pages.dart';
 import 'package:my_laundry/pages/dashboard_pages.dart';
@@ -30,59 +31,60 @@ class _LoginPagesState extends ConsumerState<LoginPages> {
   final formKey = GlobalKey<FormState>();
 
   execute() {
-    bool validate = formKey.currentState!.validate();
-    if (!validate) return;
+    bool validInput = formKey.currentState!.validate();
+    if (!validInput) return;
 
     setLoginStatus(ref, 'Loading');
 
-    UserDataSource.login(email: edtEmail.text, password: edtPassword.text)
-        .then((value) {
+    UserDataSource.login(
+      email: edtEmail.text,
+      password: edtPassword.text,
+    ).then((value) {
       String newStatus = '';
 
-      value.fold((failure) {
-        //Failure
-        switch (failure.runtimeType) {
-          case ServerFailure:
-            newStatus = 'Server Error';
-            DInfo.toastError(newStatus);
-            break;
-          case NotFoundFailure:
-            newStatus = 'Error Not Found';
-            DInfo.toastError(newStatus);
-            break;
-          case ForbiddenFailure:
-            newStatus = 'You Don\'t Have Access';
-            DInfo.toastError(newStatus);
-            break;
-          case BadRequestFailure:
-            newStatus = 'Bad Request';
-            DInfo.toastError(newStatus);
-            break;
-          case InvalidInputFailure:
-            newStatus = 'Invalid Input';
-            AppResponse.invalidInput(context, failure.mesaage ?? '{}');
-            break;
-          case UnauthorisedFailure:
-            newStatus = 'Login Failed';
-            DInfo.toastError(newStatus);
-          default:
-            newStatus = 'Request Error';
-            DInfo.toastError(newStatus);
-            newStatus = failure.mesaage ?? '-';
-            break;
-        }
-        setLoginStatus(ref, newStatus);
-      }, (result) {
-        AppSession.setUser(result['data']);
-        AppSession.setBearerToken(result['token']);
-        DInfo.toastSuccess('Login Success');
-        setLoginStatus(ref, 'Success');
-        Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const DashboardPages(),
-            ));
-      });
+      value.fold(
+        (failure) {
+          switch (failure.runtimeType) {
+            case ServerFailure:
+              newStatus = 'Server Error';
+              DInfo.toastError(newStatus);
+              break;
+            case NotFoundFailure:
+              newStatus = 'Error Not Found';
+              DInfo.toastError(newStatus);
+              break;
+            case ForbiddenFailure:
+              newStatus = 'You don\'t have access';
+              DInfo.toastError(newStatus);
+              break;
+            case BadRequestFailure:
+              newStatus = 'Bad request';
+              DInfo.toastError(newStatus);
+              break;
+            case InvalidInputFailure:
+              newStatus = 'Invalid Input';
+              AppResponse.invalidInput(context, failure.mesaage ?? '{}');
+              break;
+            case UnauthorisedFailure:
+              newStatus = 'Login Failed';
+              DInfo.toastError(newStatus);
+              break;
+            default:
+              newStatus = 'Request Error';
+              DInfo.toastError(newStatus);
+              newStatus = failure.mesaage ?? '-';
+              break;
+          }
+          setLoginStatus(ref, newStatus);
+        },
+        (result) {
+          AppSession.setUser(result['data']);
+          AppSession.setBearerToken(result['token']);
+          DInfo.toastSuccess('Login Success');
+          setLoginStatus(ref, 'Success');
+          Nav.replace(context, const DashboardPages());
+        },
+      );
     });
   }
 
@@ -168,12 +170,7 @@ class _LoginPagesState extends ConsumerState<LoginPages> {
                                 aspectRatio: 1,
                                 child: DButtonFlat(
                                     onClick: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                const RegisterPages(),
-                                          ));
+                                      Nav.push(context, const RegisterPages());
                                     },
                                     mainColor: Colors.white70,
                                     radius: 10,
