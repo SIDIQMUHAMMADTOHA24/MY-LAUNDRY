@@ -1,3 +1,6 @@
+import 'package:d_view/d_view.dart';
+import 'package:flutter/material.dart';
+
 class AppConstant {
   static const appName = 'My Laundry';
 
@@ -23,4 +26,18 @@ class AppConstant {
 
   static const user = 'user';
   static const bearerToken = 'bearer_token';
+
+  static List<Map> navMenuDashboard = [
+    {'view': DView.empty('Home'), 'icon': Icons.home, 'label': 'Home'},
+    {
+      'view': DView.empty('My Laundry'),
+      'icon': Icons.local_laundry_service,
+      'label': 'My Laundry'
+    },
+    {
+      'view': DView.empty('Account'),
+      'icon': Icons.account_circle,
+      'label': 'Account'
+    }
+  ];
 }
