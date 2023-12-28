@@ -8,7 +8,6 @@ import 'package:my_laundry/config/failure.dart';
 class AppResponse {
   static Map data(Response response) {
     DMethod.printResponse(response);
-
     switch (response.statusCode) {
       case 200:
       case 201:

@@ -1,6 +1,7 @@
 import 'package:d_view/d_view.dart';
 import 'package:flutter/material.dart';
 import 'package:my_laundry/pages/dashboard_view/account_view.dart';
+import 'package:my_laundry/pages/dashboard_view/home_view.dart';
 
 class AppConstant {
   static const appName = 'My Laundry';
@@ -32,7 +33,7 @@ class AppConstant {
       'Laundry Market App to monitor you laundry status';
 
   static List<Map> navMenuDashboard = [
-    {'view': DView.empty('Home'), 'icon': Icons.home, 'label': 'Home'},
+    {'view': const HomeView(), 'icon': Icons.home, 'label': 'Home'},
     {
       'view': DView.empty('My Laundry'),
       'icon': Icons.local_laundry_service,
@@ -43,5 +44,13 @@ class AppConstant {
       'icon': Icons.account_circle,
       'label': 'Account'
     }
+  ];
+
+  static const homeCatagory = [
+    'All',
+    'Regular',
+    'Express',
+    'Economical',
+    'Exclusive'
   ];
 }
