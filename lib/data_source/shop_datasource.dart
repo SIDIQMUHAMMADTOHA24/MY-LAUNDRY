@@ -22,4 +22,20 @@ class ShopDataSource {
       return Left(FetechFailure(e.toString()));
     }
   }
+
+  static Future<Either<Failure, Map>> searchByCity(
+      {required String name}) async {
+    var uri = Uri.parse('${AppConstant.baseUrl}/shop/search/city/$name');
+    final token = await AppSession.getBearerToken();
+    try {
+      final response = await http.get(uri, headers: AppRequest.header(token));
+      final data = AppResponse.data(response);
+      return Right(data);
+    } on Exception catch (e) {
+      if (e is Failure) {
+        return Left(e);
+      }
+      return Left(FetechFailure(e.toString()));
+    }
+  }
 }

@@ -9,10 +9,12 @@ import 'package:my_laundry/config/app_colors.dart';
 import 'package:my_laundry/config/app_constant.dart';
 
 import 'package:my_laundry/config/failure.dart';
+import 'package:my_laundry/config/nav.dart';
 import 'package:my_laundry/data_source/promo_datasource.dart';
 import 'package:my_laundry/data_source/shop_datasource.dart';
 import 'package:my_laundry/model/promo_model.dart';
 import 'package:my_laundry/model/shop_model.dart';
+import 'package:my_laundry/pages/search_by_city_pages.dart';
 import 'package:my_laundry/pages/widget/error_background.dart';
 import 'package:my_laundry/providers/home_provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -28,7 +30,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
   final edtSearch = TextEditingController();
   final pageController = PageController();
 
-  gotoSearchCity() {}
+  gotoSearchCity() {
+    Nav.push(context, SearchByCityPages(query: edtSearch.text));
+  }
 
   getPromo() {
     PromoDataSource.readLimit().then((value) {
