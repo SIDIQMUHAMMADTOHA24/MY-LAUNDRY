@@ -14,11 +14,10 @@ class PromoDataSource {
     try {
       final response = await http.get(uri, headers: AppRequest.header(token));
       final data = AppResponse.data(response);
-      print('succes');
+
       return Right(data);
     } on Exception catch (e) {
       if (e is Failure) {
-        print('error');
         return Left(e);
       }
       return Left(FetechFailure(e.toString()));
