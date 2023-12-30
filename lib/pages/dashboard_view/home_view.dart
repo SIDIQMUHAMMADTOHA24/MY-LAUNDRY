@@ -9,10 +9,13 @@ import 'package:my_laundry/config/app_colors.dart';
 import 'package:my_laundry/config/app_constant.dart';
 
 import 'package:my_laundry/config/failure.dart';
+import 'package:my_laundry/config/nav.dart';
 import 'package:my_laundry/data_source/promo_datasource.dart';
 import 'package:my_laundry/data_source/shop_datasource.dart';
 import 'package:my_laundry/model/promo_model.dart';
 import 'package:my_laundry/model/shop_model.dart';
+import 'package:my_laundry/pages/search_by_city_pages.dart';
+import 'package:my_laundry/pages/widget/error_background.dart';
 import 'package:my_laundry/providers/home_provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -27,7 +30,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
   final edtSearch = TextEditingController();
   final pageController = PageController();
 
-  gotoSearchCity() {}
+  gotoSearchCity() {
+    Nav.push(context, SearchByCityPages(query: edtSearch.text));
+  }
 
   getPromo() {
     PromoDataSource.readLimit().then((value) {
@@ -114,8 +119,11 @@ class _HomeViewState extends ConsumerState<HomeView> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: [header(), catagory(), promo(), recommendation()],
+    return RefreshIndicator(
+      onRefresh: () async => await refresh(),
+      child: ListView(
+        children: [header(), catagory(), promo(), recommendation()],
+      ),
     );
   }
 
@@ -270,7 +278,14 @@ class _HomeViewState extends ConsumerState<HomeView> {
                 ],
               ),
             ),
-            if (list.isEmpty) DView.empty('No promo'),
+            if (list.isEmpty)
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 30),
+                child: ErrorBackground(
+                  ratio: 16 / 9,
+                  message: 'No Promo',
+                ),
+              ),
             if (list.isNotEmpty)
               AspectRatio(
                 aspectRatio: 16 / 9,
@@ -406,7 +421,14 @@ class _HomeViewState extends ConsumerState<HomeView> {
               ],
             ),
           ),
-          if (list.isEmpty) DView.empty('No Recommendation'),
+          if (list.isEmpty)
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 30),
+              child: ErrorBackground(
+                ratio: 1.2,
+                message: 'No Recommendation Yet',
+              ),
+            ),
           if (list.isNotEmpty)
             SizedBox(
               height: 270,
