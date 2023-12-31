@@ -176,7 +176,7 @@ class DetailShopPages extends StatelessWidget {
           fit: StackFit.expand,
           children: [
             Card(
-              elevation: 3,
+              elevation: 2,
               margin: const EdgeInsets.all(0),
               shadowColor: Colors.grey,
               shape: RoundedRectangleBorder(
