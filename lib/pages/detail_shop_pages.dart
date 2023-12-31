@@ -1,3 +1,4 @@
+import 'package:d_info/d_info.dart';
 import 'package:d_view/d_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -6,10 +7,26 @@ import 'package:my_laundry/config/app_colors.dart';
 import 'package:my_laundry/config/app_constant.dart';
 import 'package:my_laundry/config/app_format.dart';
 import 'package:my_laundry/model/shop_model.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:whatsapp_unilink/whatsapp_unilink.dart';
 
 class DetailShopPages extends StatelessWidget {
   const DetailShopPages({super.key, required this.shop});
   final ShopModel shop;
+
+  launchWa(BuildContext context, String number) async {
+    bool? yes = await DInfo.dialogConfirmation(
+        context, 'Chat via Whatssap', 'Yes to confirm');
+    if (yes ?? false) {
+      const link = WhatsAppUnilink(
+          //dikarnakan isi dari shop.wa dari API hanya dummy maka, setelah aplikasi rilis bisa diubah ke number
+          phoneNumber: '6283104846474',
+          text: 'Hello, I want to order a laundry service');
+      if (await canLaunchUrl(link.asUri())) {
+        launchUrl(link.asUri(), mode: LaunchMode.externalApplication);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +36,7 @@ class DetailShopPages extends StatelessWidget {
         const SizedBox(
           height: 10,
         ),
-        grubItemInfo(),
+        grubItemInfo(context),
         const SizedBox(
           height: 20,
         ),
@@ -91,7 +108,7 @@ class DetailShopPages extends StatelessWidget {
     );
   }
 
-  Padding grubItemInfo() {
+  Padding grubItemInfo(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
@@ -120,12 +137,15 @@ class DetailShopPages extends StatelessWidget {
                 const SizedBox(
                   height: 6,
                 ),
-                itemInfo(
-                    Image.asset(
-                      AppAssets.wa,
-                      width: 20,
-                    ),
-                    shop.whatsapp),
+                GestureDetector(
+                  onTap: () => launchWa(context, shop.whatsapp),
+                  child: itemInfo(
+                      Image.asset(
+                        AppAssets.wa,
+                        width: 20,
+                      ),
+                      shop.whatsapp),
+                ),
               ],
             ),
           ),
