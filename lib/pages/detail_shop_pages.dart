@@ -18,9 +18,9 @@ class DetailShopPages extends StatelessWidget {
     bool? yes = await DInfo.dialogConfirmation(
         context, 'Chat via Whatssap', 'Yes to confirm');
     if (yes ?? false) {
-      const link = WhatsAppUnilink(
-          //dikarnakan isi dari shop.wa dari API hanya dummy maka, setelah aplikasi rilis bisa diubah ke number
-          phoneNumber: '6283104846474',
+      final link = WhatsAppUnilink(
+          //no telp hanya dummy
+          phoneNumber: number,
           text: 'Hello, I want to order a laundry service');
       if (await canLaunchUrl(link.asUri())) {
         launchUrl(link.asUri(), mode: LaunchMode.externalApplication);
@@ -176,7 +176,7 @@ class DetailShopPages extends StatelessWidget {
           fit: StackFit.expand,
           children: [
             Card(
-              elevation: 3,
+              elevation: 2,
               margin: const EdgeInsets.all(0),
               shadowColor: Colors.grey,
               shape: RoundedRectangleBorder(
