@@ -306,27 +306,18 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                   ? 20
                                   : 30,
                               30),
-                          child: Container(
-                            decoration: const BoxDecoration(boxShadow: [
-                              BoxShadow(
-                                  color: Colors.grey,
-                                  blurRadius: 10,
-                                  offset: Offset(0, 5))
-                            ]),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
-                              child: FadeInImage(
-                                placeholder: const AssetImage(
-                                    AppAssets.placeholderLaundry),
-                                image: NetworkImage(
-                                  '${AppConstant.baseImageUrl}/promo/${item.image}',
-                                ),
-                                fit: BoxFit.cover,
-                                imageErrorBuilder:
-                                    (context, error, stackTrace) {
-                                  return const Icon(Icons.error);
-                                },
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: FadeInImage(
+                              placeholder: const AssetImage(
+                                  AppAssets.placeholderLaundry),
+                              image: NetworkImage(
+                                '${AppConstant.baseImageUrl}/promo/${item.image}',
                               ),
+                              fit: BoxFit.cover,
+                              imageErrorBuilder: (context, error, stackTrace) {
+                                return const Icon(Icons.error);
+                              },
                             ),
                           ),
                         ),
@@ -339,9 +330,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
                             decoration: BoxDecoration(
                                 boxShadow: [
                                   BoxShadow(
-                                      color: Colors.grey[600]!,
-                                      blurRadius: 8,
-                                      offset: const Offset(0, 2))
+                                    color: Colors.grey[600]!,
+                                    blurRadius: 1,
+                                  )
                                 ],
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(8)),
@@ -449,8 +440,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
                           boxShadow: const [
                             BoxShadow(
                                 color: Colors.grey,
-                                blurRadius: 10,
-                                offset: Offset(0, 5))
+                                blurRadius: 2,
+                                offset: Offset(0, 1))
                           ]),
                       margin: EdgeInsets.fromLTRB(index == 0 ? 30 : 0, 0,
                           index == list.length - 1 ? 30 : 20, 20),
