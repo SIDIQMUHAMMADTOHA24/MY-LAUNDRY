@@ -14,6 +14,7 @@ import 'package:my_laundry/data_source/promo_datasource.dart';
 import 'package:my_laundry/data_source/shop_datasource.dart';
 import 'package:my_laundry/model/promo_model.dart';
 import 'package:my_laundry/model/shop_model.dart';
+import 'package:my_laundry/pages/detail_shop_pages.dart';
 import 'package:my_laundry/pages/search_by_city_pages.dart';
 import 'package:my_laundry/pages/widget/error_background.dart';
 import 'package:my_laundry/providers/home_provider.dart';
@@ -437,149 +438,155 @@ class _HomeViewState extends ConsumerState<HomeView> {
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (context, index) {
                   ShopModel item = list[index];
-                  return Container(
-                    width: 200,
-                    decoration: BoxDecoration(
+                  return GestureDetector(
+                    onTap: () {
+                      Nav.push(context, DetailShopPages(shop: item));
+                    },
+                    child: Container(
+                      width: 200,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          boxShadow: const [
+                            BoxShadow(
+                                color: Colors.grey,
+                                blurRadius: 10,
+                                offset: Offset(0, 5))
+                          ]),
+                      margin: EdgeInsets.fromLTRB(index == 0 ? 30 : 0, 0,
+                          index == list.length - 1 ? 30 : 20, 20),
+                      child: ClipRRect(
                         borderRadius: BorderRadius.circular(15),
-                        boxShadow: const [
-                          BoxShadow(
-                              color: Colors.grey,
-                              blurRadius: 10,
-                              offset: Offset(0, 5))
-                        ]),
-                    margin: EdgeInsets.fromLTRB(index == 0 ? 30 : 0, 0,
-                        index == list.length - 1 ? 30 : 20, 20),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(15),
-                      child: Stack(
-                        fit: StackFit.expand,
-                        children: [
-                          FadeInImage(
-                            placeholder:
-                                const AssetImage(AppAssets.placeholderLaundry),
-                            image: NetworkImage(
-                              '${AppConstant.baseImageUrl}/shop/${item.image}',
+                        child: Stack(
+                          fit: StackFit.expand,
+                          children: [
+                            FadeInImage(
+                              placeholder: const AssetImage(
+                                  AppAssets.placeholderLaundry),
+                              image: NetworkImage(
+                                '${AppConstant.baseImageUrl}/shop/${item.image}',
+                              ),
+                              fit: BoxFit.cover,
+                              imageErrorBuilder: (context, error, stackTrace) {
+                                return const Icon(Icons.error);
+                              },
                             ),
-                            fit: BoxFit.cover,
-                            imageErrorBuilder: (context, error, stackTrace) {
-                              return const Icon(Icons.error);
-                            },
-                          ),
-                          Align(
-                            alignment: Alignment.bottomCenter,
-                            child: Container(
-                              height: MediaQuery.sizeOf(context).height / 2,
-                              decoration: const BoxDecoration(
-                                  gradient: LinearGradient(
-                                      colors: [
-                                    Colors.transparent,
-                                    Colors.black54
-                                  ],
-                                      begin: Alignment.topCenter,
-                                      end: Alignment.bottomCenter)),
+                            Align(
+                              alignment: Alignment.bottomCenter,
+                              child: Container(
+                                height: MediaQuery.sizeOf(context).height / 2,
+                                decoration: const BoxDecoration(
+                                    gradient: LinearGradient(
+                                        colors: [
+                                      Colors.transparent,
+                                      Colors.black54
+                                    ],
+                                        begin: Alignment.topCenter,
+                                        end: Alignment.bottomCenter)),
+                              ),
                             ),
-                          ),
-                          Positioned(
-                            bottom: 8,
-                            right: 8,
-                            left: 8,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Container(
-                                      padding: const EdgeInsets.all(6),
-                                      decoration: BoxDecoration(
-                                          color: AppColors.green,
-                                          borderRadius:
-                                              BorderRadius.circular(5)),
-                                      child: const Text(
-                                        'Regular',
-                                        style: TextStyle(color: Colors.white),
+                            Positioned(
+                              bottom: 8,
+                              right: 8,
+                              left: 8,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.all(6),
+                                        decoration: BoxDecoration(
+                                            color: AppColors.green,
+                                            borderRadius:
+                                                BorderRadius.circular(5)),
+                                        child: const Text(
+                                          'Regular',
+                                          style: TextStyle(color: Colors.white),
+                                        ),
                                       ),
-                                    ),
-                                    const SizedBox(
-                                      width: 8,
-                                    ),
-                                    Container(
-                                      padding: const EdgeInsets.all(6),
-                                      decoration: BoxDecoration(
-                                          color: AppColors.green,
-                                          borderRadius:
-                                              BorderRadius.circular(5)),
-                                      child: const Text(
-                                        'Express',
-                                        style: TextStyle(color: Colors.white),
+                                      const SizedBox(
+                                        width: 8,
                                       ),
-                                    )
-                                  ],
-                                ),
-                                const SizedBox(
-                                  height: 8,
-                                ),
-                                Container(
-                                  padding: const EdgeInsets.all(8),
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(9),
-                                      color: Colors.white),
-                                  child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          item.name,
-                                          style: GoogleFonts.ptSans(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 18),
+                                      Container(
+                                        padding: const EdgeInsets.all(6),
+                                        decoration: BoxDecoration(
+                                            color: AppColors.green,
+                                            borderRadius:
+                                                BorderRadius.circular(5)),
+                                        child: const Text(
+                                          'Express',
+                                          style: TextStyle(color: Colors.white),
                                         ),
-                                        const SizedBox(
-                                          height: 4,
-                                        ),
-                                        Row(
-                                          children: [
-                                            RatingBar.builder(
-                                              initialRating: item.rate,
-                                              itemCount: 5,
-                                              allowHalfRating: true,
-                                              unratedColor: Colors.grey,
-                                              ignoreGestures: true,
-                                              itemSize: 12,
-                                              itemBuilder: (context, index) {
-                                                return const Icon(
-                                                  Icons.star,
-                                                  color: Colors.amber,
-                                                );
-                                              },
-                                              onRatingUpdate: (value) {},
-                                            ),
-                                            const SizedBox(
-                                              width: 4,
-                                            ),
-                                            Text(
-                                              '(${item.rate})',
-                                              style: const TextStyle(
-                                                  fontSize: 12,
-                                                  color: Colors.black54),
-                                            )
-                                          ],
-                                        ),
-                                        const SizedBox(
-                                          height: 4,
-                                        ),
-                                        Text(
-                                          item.location,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: const TextStyle(
-                                              fontSize: 12, color: Colors.grey),
-                                        )
-                                      ]),
-                                )
-                              ],
-                            ),
-                          )
-                        ],
+                                      )
+                                    ],
+                                  ),
+                                  const SizedBox(
+                                    height: 8,
+                                  ),
+                                  Container(
+                                    padding: const EdgeInsets.all(8),
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(9),
+                                        color: Colors.white),
+                                    child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            item.name,
+                                            style: GoogleFonts.ptSans(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 18),
+                                          ),
+                                          const SizedBox(
+                                            height: 4,
+                                          ),
+                                          Row(
+                                            children: [
+                                              RatingBar.builder(
+                                                initialRating: item.rate,
+                                                itemCount: 5,
+                                                allowHalfRating: true,
+                                                unratedColor: Colors.grey,
+                                                ignoreGestures: true,
+                                                itemSize: 12,
+                                                itemBuilder: (context, index) {
+                                                  return const Icon(
+                                                    Icons.star,
+                                                    color: Colors.amber,
+                                                  );
+                                                },
+                                                onRatingUpdate: (value) {},
+                                              ),
+                                              const SizedBox(
+                                                width: 4,
+                                              ),
+                                              Text(
+                                                '(${item.rate})',
+                                                style: const TextStyle(
+                                                    fontSize: 12,
+                                                    color: Colors.black54),
+                                              )
+                                            ],
+                                          ),
+                                          const SizedBox(
+                                            height: 4,
+                                          ),
+                                          Text(
+                                            item.location,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: const TextStyle(
+                                                fontSize: 12,
+                                                color: Colors.grey),
+                                          )
+                                        ]),
+                                  )
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   );
